@@ -6,6 +6,16 @@ include:
 #  - apache.vhosts.standard
 #  - apache.mod_proxy_http
 
+jira:
+  group:
+    - present
+  user:
+    - present
+    - groups:
+      - jira
+    - require:
+      - group: jira
+
 ### APPLICATION INSTALL ###
 unpack-jira-tarball:
   archive.extracted:
