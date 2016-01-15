@@ -25,7 +25,7 @@ unpack-bitbucket-tarball:
     - archive_format: tar
     - user: bitbucket 
     - tar_options: z
-    - if_missing: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+    - if_missing: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}
     - runas: bitbucket
     - keep: True
     - require:
@@ -40,7 +40,7 @@ fix-bitbucket-filesystem-permissions:
     - recurse:
       - user
     - names:
-      - {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+      - {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}
       - {{ bitbucket.home }}
       - {{ bitbucket.log_root }}
     - watch:
@@ -49,7 +49,7 @@ fix-bitbucket-filesystem-permissions:
 create-bitbucket-symlink:
   file.symlink:
     - name: {{ bitbucket.prefix }}/bitbucket
-    - target: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+    - target: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}
     - user: bitbucket
     - watch:
       - archive: unpack-bitbucket-tarball
