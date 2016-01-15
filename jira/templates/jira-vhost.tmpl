@@ -1,5 +1,7 @@
-<VirtualHost *:80>
-    ServerName jira.example.com
+{%- from 'jira/conf/settings.sls' import jira with context %}
+
+<VirtualHost {{ jira.webserver_fqdn }}:80>
+    ServerName {{ jira.webserver_fqdn }}
  
     ProxyRequests Off
     <Proxy *>
