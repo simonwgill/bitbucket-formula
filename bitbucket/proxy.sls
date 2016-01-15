@@ -4,7 +4,7 @@
 bitbucket-vhost:
   file.managed:
     - name: /etc/httpd/sites-available/bitbucket
-    - source: salt://bitbucket/templates/bitbucket-vhost.tmpl
+    - source: salt://bitbucket/templates/bitbucket.vhost.tmpl
     - template: jinja
     - file: sites-available
 
