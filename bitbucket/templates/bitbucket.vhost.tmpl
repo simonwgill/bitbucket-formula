@@ -1,0 +1,16 @@
+<VirtualHost *:80>
+    ServerName bitbucket.example.com
+ 
+    ProxyRequests Off
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
+ 
+    ProxyPass / http://localhost:7990/
+    ProxyPassReverse / http://localhost:7990/
+    <Location />
+        Order allow,deny
+        Allow from all
+    </Location>
+</VirtualHost>
