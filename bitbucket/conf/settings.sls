@@ -14,7 +14,7 @@
 {%- set default_jvm_Xms      = '384m' %}
 {%- set default_jvm_Xmx      = '768m' %}
 {%- set default_jvm_MaxPermSize = '384m' %}
-{%- set default_webserver_fqdn = 'jira.example.com' %}
+{%- set default_webserver_fqdn = 'bitbucket.example.com' %}
 
 {%- set version        = g.get('version', p.get('version', default_version)) %}
 {%- set source_url     = g.get('source_url', p.get('source_url', default_source_url)) %}

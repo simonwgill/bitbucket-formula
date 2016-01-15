@@ -1,5 +1,7 @@
-<VirtualHost *:80>
-    ServerName bitbucket.example.com
+{%- from 'bitbucket/conf/settings.sls' import bitbucket with context %}
+
+<VirtualHost {{ bitbucket.webserver_fqdn }}:80>
+    ServerName {{ bitbucket.webserver_fqdn }}
  
     ProxyRequests Off
     <Proxy *>

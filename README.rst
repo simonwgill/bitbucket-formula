@@ -25,4 +25,4 @@ Installs the bitbucket standalone tarball and starts the service.  Configures
 ``bitbucket.proxy``
 ------------------
 
-Enables a basic Apache proxy for bitbucket.
+Enables a basic Apache proxy for bitbucket. This currently requires https://github.com/simonwgill/apacheproxy-formula
