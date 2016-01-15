@@ -54,7 +54,7 @@ create-bitbucket-symlink:
     - watch:
       - archive: unpack-bitbucket-tarball
 
-create-logs-symlink:
+create-bitbucket-logs-symlink:
   file.symlink:
     - name: {{ bitbucket.prefix }}/bitbucket/logs
     - target: {{ bitbucket.log_root }}
