@@ -136,3 +136,5 @@ bitbucket-init-script:
 #     - watch_in:
 #       - module: bitbucket-restart
 
+git:
+  pkg.installed
