@@ -25,7 +25,7 @@ Installs the jira standalone tarball and starts the service.  Configures
 ``jira.proxy``
 ------------------
 
-Enables a basic Apache proxy for jira.
+Enables a basic Apache proxy for jira. This currently requires https://github.com/simonwgill/apacheproxy-formula
 
 
 Known Issues
