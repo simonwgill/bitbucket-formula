@@ -54,7 +54,7 @@ create-jira-symlink:
     - watch:
       - archive: unpack-jira-tarball
 
-create-logs-symlink:
+create-jira-logs-symlink:
   file.symlink:
     - name: {{ jira.prefix }}/jira/logs
     - target: {{ jira.log_root }}
