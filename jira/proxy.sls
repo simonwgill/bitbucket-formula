@@ -1,4 +1,4 @@
-{%- from 'jira/conf/settings.sls' import jira with context %}
+{%- from 'bitbucket/conf/settings.sls' import bitbucket with context %}
 
 
 apache:
@@ -21,10 +21,10 @@ apache-reload:
     - name: service.reload
     - m_name: apache2
 
-jira-vhost:
+bitbucket-vhost:
   file.managed:
-    - name: /etc/apache2/sites-available/jira
-    - source: salt://jira/templates/jira-vhost.tmpl
+    - name: /etc/apache2/sites-available/bitbucket
+    - source: salt://bitbucket/templates/bitbucket-vhost.tmpl
 
 disable-default-site:
   file.absent:
@@ -32,16 +32,16 @@ disable-default-site:
     - listen_in:
       - module: apache-reload
     - require:
-      - file: enable-jira-site
+      - file: enable-bitbucket-site
 
-enable-jira-site:
+enable-bitbucket-site:
   file.symlink:
-    - name: /etc/apache2/sites-enabled/jira
-    - target: /etc/apache2/sites-available/jira
+    - name: /etc/apache2/sites-enabled/bitbucket
+    - target: /etc/apache2/sites-available/bitbucket
     - listen_in:
       - module: apache-reload
     - require:
-      - file: jira-vhost
+      - file: bitbucket-vhost
  
 a2enmod proxy:
   cmd.wait:

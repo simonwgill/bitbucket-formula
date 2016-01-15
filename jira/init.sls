@@ -1,4 +1,4 @@
-{%- from 'jira/conf/settings.sls' import jira with context %}
+{%- from 'bitbucket/conf/settings.sls' import bitbucket with context %}
 
 include:
   - sun-java
@@ -7,122 +7,122 @@ include:
 #  - apache.mod_proxy_http
 
 ### APPLICATION INSTALL ###
-unpack-jira-tarball:
+unpack-bitbucket-tarball:
   archive.extracted:
-    - name: {{ jira.prefix }}
-    - source: {{ jira.source_url }}/atlassian-jira-{{ jira.version }}.tar.gz
-    - source_hash: {{ salt['pillar.get']('jira:source_hash', '') }}
+    - name: {{ bitbucket.prefix }}
+    - source: {{ bitbucket.source_url }}/atlassian-bitbucket-{{ bitbucket.version }}.tar.gz
+    - source_hash: {{ salt['pillar.get']('bitbucket:source_hash', '') }}
     - archive_format: tar
-    - user: jira 
+    - user: bitbucket 
     - tar_options: z
-    - if_missing: {{ jira.prefix }}/atlassian-jira-{{ jira.version }}-standalone
-    - runas: jira
+    - if_missing: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+    - runas: bitbucket
     - keep: True
     - require:
-      - module: jira-stop
-      - file: jira-init-script
+      - module: bitbucket-stop
+      - file: bitbucket-init-script
     - listen_in:
-      - module: jira-restart
+      - module: bitbucket-restart
 
-fix-jira-filesystem-permissions:
+fix-bitbucket-filesystem-permissions:
   file.directory:
-    - user: jira
+    - user: bitbucket
     - recurse:
       - user
     - names:
-      - {{ jira.prefix }}/atlassian-jira-{{ jira.version }}-standalone
-      - {{ jira.home }}
-      - {{ jira.log_root }}
+      - {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+      - {{ bitbucket.home }}
+      - {{ bitbucket.log_root }}
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-bitbucket-tarball
 
-create-jira-symlink:
+create-bitbucket-symlink:
   file.symlink:
-    - name: {{ jira.prefix }}/jira
-    - target: {{ jira.prefix }}/atlassian-jira-{{ jira.version }}-standalone
-    - user: jira
+    - name: {{ bitbucket.prefix }}/bitbucket
+    - target: {{ bitbucket.prefix }}/atlassian-bitbucket-{{ bitbucket.version }}-standalone
+    - user: bitbucket
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-bitbucket-tarball
 
 create-logs-symlink:
   file.symlink:
-    - name: {{ jira.prefix }}/jira/logs
-    - target: {{ jira.log_root }}
-    - user: jira
-    - backupname: {{ jira.prefix }}/jira/old_logs
+    - name: {{ bitbucket.prefix }}/bitbucket/logs
+    - target: {{ bitbucket.log_root }}
+    - user: bitbucket
+    - backupname: {{ bitbucket.prefix }}/bitbucket/old_logs
     - watch:
-      - archive: unpack-jira-tarball
+      - archive: unpack-bitbucket-tarball
 
 ### SERVICE ###
-jira-service:
+bitbucket-service:
   service.running:
-    - name: jira
+    - name: bitbucket
     - enable: True
     - require:
-      - archive: unpack-jira-tarball
-      - file: jira-init-script
+      - archive: unpack-bitbucket-tarball
+      - file: bitbucket-init-script
 
 # used to trigger restarts by other states
-jira-restart:
+bitbucket-restart:
   module.wait:
     - name: service.restart
-    - m_name: jira
+    - m_name: bitbucket
 
-jira-stop:
+bitbucket-stop:
   module.wait:
     - name: service.stop
-    - m_name: jira  
+    - m_name: bitbucket  
 
-jira-init-script:
+bitbucket-init-script:
   file.managed:
-    - name: '/etc/init.d/jira'
-    - source: salt://jira/templates/jira.init.tmpl
+    - name: '/etc/init.d/bitbucket'
+    - source: salt://bitbucket/templates/bitbucket.init.tmpl
     - user: root
     - group: root
     - mode: 0755
     - template: jinja
     - context:
-      jira: {{ jira|json }}
+      bitbucket: {{ bitbucket|json }}
 
 ### FILES ###
-{{ jira.home }}/jira-config.properties:
+{{ bitbucket.home }}/bitbucket-config.properties:
   file.managed:
-    - source: salt://jira/templates/jira-config.properties.tmpl
-    - user: {{ jira.user }}
+    - source: salt://bitbucket/templates/bitbucket-config.properties.tmpl
+    - user: {{ bitbucket.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: bitbucket-restart
 
-{{ jira.home }}/dbconfig.xml:
+{{ bitbucket.home }}/dbconfig.xml:
   file.managed:
-    - source: salt://jira/templates/dbconfig.xml.tmpl
-    - user: {{ jira.user }}
+    - source: salt://bitbucket/templates/dbconfig.xml.tmpl
+    - user: {{ bitbucket.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: bitbucket-restart
 
-{{ jira.prefix }}/jira/atlassian-jira/WEB-INF/classes/jira-application.properties:
+{{ bitbucket.prefix }}/bitbucket/atlassian-bitbucket/WEB-INF/classes/bitbucket-application.properties:
   file.managed:
-    - source: salt://jira/templates/jira-application.properties.tmpl
-    - user: {{ jira.user }}
+    - source: salt://bitbucket/templates/bitbucket-application.properties.tmpl
+    - user: {{ bitbucket.user }}
     - template: jinja
     - listen_in:
-      - module: jira-restart
+      - module: bitbucket-restart
 
-{{ jira.prefix }}/jira/bin/setenv.sh:
+{{ bitbucket.prefix }}/bitbucket/bin/setenv.sh:
   file.managed:
-    - source: salt://jira/templates/setenv.sh.tmpl
-    - user: {{ jira.user }}
+    - source: salt://bitbucket/templates/setenv.sh.tmpl
+    - user: {{ bitbucket.user }}
     - template: jinja
     - mode: 0644
     - listen_in:
-      - module: jira-restart
+      - module: bitbucket-restart
 
-# {{ jira.prefix }}/jira/conf/logging.properties:
+# {{ bitbucket.prefix }}/bitbucket/conf/logging.properties:
 #   file.managed:
-#     - source: salt://jira/templates/logging.properties.tmpl
-#     - user: {{ jira.user }}
+#     - source: salt://bitbucket/templates/logging.properties.tmpl
+#     - user: {{ bitbucket.user }}
 #     - template: jinja
 #     - watch_in:
-#       - module: jira-restart
+#       - module: bitbucket-restart
 
